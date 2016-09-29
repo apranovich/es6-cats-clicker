@@ -1,0 +1,23 @@
+html, body {
+  margin: 0;
+  height: 100%;
+}
+.container {
+  display: -webkit-flex;
+  display: flex;
+  min-height: 100%;
+}
+#cats-list {
+  -webkit-flex: 1;
+  flex: 1;
+}
+#cats-list > ul > li{
+  padding: 5px;
+}
+#cat-area {
+  padding: 10px;
+  -webkit-flex: 4;
+  flex: 4;
+  border: 1px solid lightgray;
+  text-align: center;
+}
