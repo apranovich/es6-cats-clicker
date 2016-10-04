@@ -7,56 +7,62 @@
       { id: 3, name: "Alex", imgSrc: "https://goo.gl/lPWdDy", clicksNumber: 0 },
       { id: 4, name: "Pit", imgSrc: "https://goo.gl/6c4fro", clicksNumber: 0 },
       { id: 5, name: "John", imgSrc: "https://goo.gl/F4QtMW", clicksNumber: 0 }
-    ]
+    ],
+    currentCat: null
   };
 
   let view = {
-    catListItemTemplate: (cat) => { 
-      return `<span>${cat.name}</span>` 
-    },
-    catTemplate: (cat) => {
-      return `<div id="${cat.name}">
-                <h2>${cat.name}</h2>
-                <img src=${cat.imgSrc} height="300" width="400"/>
-                <h3>Clicks number: <span class="${cat.name}-clicks-number">${cat.clicksNumber}</span></h3>
-              </div>`;
-    },
-    renderCat: (id) => {
-      let selectedCat = model.cats.filter((item) => {return item.id === id})[0];
-      let catDetails = document.getElementById("cat-area");
-      catDetails.innerHTML = view.catTemplate(selectedCat);
-    },
-    renderCatsList: () => {
-      let docFragment = document.createDocumentFragment();
-      let listElement = document.getElementById("cats-list").getElementsByTagName("ul")[0];
+    catsList: {
+      template: (cat) => { 
+        return `<button>${cat.name}</button>`;
+      },
+      render: (cats) => {
+        let docFragment = document.createDocumentFragment();
+        let listElement = document.getElementById("cats-list").getElementsByTagName("ul")[0];
+          
+        for(let cat of cats) {
+          let liElem = document.createElement('li');
+          liElem.innerHTML = view.catsList.template(cat);
+          liElem.addEventListener('click', () => {
+            model.currentCat = cat;
+            view.cat.render(cat);
+          });
+          docFragment.appendChild(liElem);
+        }
         
-      for(let cat of model.cats) {
-        let liElem = document.createElement('li');
-        liElem.innerHTML = view.catListItemTemplate(cat);
-        liElem.addEventListener('click', () => {
-          view.renderCat(cat.id);
-          controller.bindCounterWithCat(cat.name);
-        });
-        docFragment.appendChild(liElem);
+        listElement.appendChild(docFragment);
       }
-      
-      listElement.appendChild(docFragment);
+    },
+    cat: {
+      render: (cat) => {
+        let catNameElem = document.getElementById("cat-name");
+        let catImgElem = document.getElementById("cat-img");
+        let catClicksCounterElem = document.getElementById("cat-clicks");
+        catNameElem.textContent = cat.name;
+        catImgElem.src = cat.imgSrc;
+        catClicksCounterElem.textContent = cat.clicksNumber;
+      }
     }
   };
 
   let controller = {
-    bindCounterWithCat: (catName) => {
-      let catParent = document.getElementById(catName);
-      let catImg = catParent.getElementsByTagName("img")[0];
-      catImg.addEventListener('click', () => {
-        let clicksNumberElement = catParent.getElementsByClassName(`${catName}-clicks-number`)[0];
-        let currentClicksNumber = +clicksNumberElement.innerHTML;
-        currentClicksNumber++;
-        clicksNumberElement.innerHTML = currentClicksNumber;
+    init: () => {
+      view.catsList.render(model.cats); // render left-side list
+      model.currentCat = model.cats[0]; // init current cat
+      view.cat.render(model.currentCat); // render current cat
+      controller.bindCounterWithCat(); // bind cat area with clicks on cat image
+    },
+    bindCounterWithCat: () => {
+      let catImgElem = document.getElementById("cat-img");
+      catImgElem.addEventListener('click', () => {
+        let cat = model.currentCat;
+        let catClicksCounterElem = document.getElementById("cat-clicks");
+        let currentClicksNumber = +catClicksCounterElem.innerHTML;
+        cat.clicksNumber = ++currentClicksNumber;
+        catClicksCounterElem.textContent = cat.clicksNumber;
       });
     }
   };
   
-  view.renderCatsList();
-  view.renderCat(model.cats[0].id);
+  controller.init();
 })();
