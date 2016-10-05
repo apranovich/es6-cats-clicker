@@ -21,3 +21,18 @@ html, body {
   border: 1px solid lightgray;
   text-align: center;
 }
+#admin-area > .form-group > label {
+  display: inline-block;
+  width: 150px;
+  text-align: right;
+  margin-right: 5px;
+}
+#admin-area > .form-group > input {
+  width: 180px;
+}
+#admin-area > .admin-buttons-area {
+  display: inline-block;
+  width: 339px; /*sum of label + input widths with adjusted for margins*/
+  text-align: right;
+  margin-top: 10px;
+}

@@ -7,14 +7,39 @@
 </head>
 <body>
   <div class="container">
+    
     <div id="cats-list">
       <ul></ul>
     </div>
+    
     <div id="cat-area">
+      
       <h2 id="cat-name"></h2>
       <img id="cat-img" src="" height="300" width="400"/>
       <h3>Clicks number: <span id="cat-clicks"></span></h3>
+      
+      <button id="admin-btn">Admin</button>
+      <div id="admin-area">
+        <div class="form-group">
+          <label>Cat name</label>
+          <input id="admin-name"></input>
+        </div>
+        <div class="form-group">
+          <label>Cat picture</label>
+          <input id="admin-img-src"></input>
+        </div>
+        <div class="form-group">
+          <label>Cat clicks count</label>
+          <input id="admin-clicks"></input>
+        </div>
+        <div class="admin-buttons-area">
+          <button id="admin-cancel">Cancel</button>
+          <button id="admin-save">Save</button>
+        </div>
+      </div>
+
     </div>
+
   </div>
 </body>
 </html>

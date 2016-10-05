@@ -42,7 +42,50 @@
         catImgElem.src = cat.imgSrc;
         catClicksCounterElem.textContent = cat.clicksNumber;
       }
-    }
+    },
+    admin: ( () => {
+      let adminArea = document.getElementById("admin-area");
+      let adminEnableButton = document.getElementById("admin-btn");
+      let adminCatName = document.getElementById("admin-name");
+      let adminCatImg = document.getElementById("admin-img-src");
+      let adminCatClicks = document.getElementById("admin-clicks");
+      let adminSaveBtn = document.getElementById("admin-save");
+      let adminCancelBtn = document.getElementById("admin-cancel");
+
+      let toggleArea = () => {
+        adminArea.style.display = adminArea.style.display === "none" ? "" : "none";
+      };
+      let toggleEnableButton = () => {
+        adminEnableButton.style.display = adminEnableButton.style.display === "none" ? "" : "none";
+      };
+
+      return {
+        init: () => {
+          toggleArea();
+          adminEnableButton.addEventListener('click', controller.enableAdmin);
+          adminSaveBtn.addEventListener('click', controller.saveAdminChanges);
+          adminCancelBtn.addEventListener('click', controller.cancelAdmin);
+        },
+        render: (selectedCat) => {
+          toggleEnableButton();
+          toggleArea();
+          adminCatName.value = selectedCat.name;
+          adminCatImg.value = selectedCat.imgSrc;
+          adminCatClicks.value = selectedCat.clicksNumber;
+        },
+        getValues: () => {
+          return {
+            name: adminCatName.value, 
+            imgSrc: adminCatImg.value, 
+            clicksNumber: adminCatClicks.value
+          };
+        },
+        close: () => {
+          toggleArea();
+          toggleEnableButton();
+        }
+      }
+    })()
   };
 
   let controller = {
@@ -51,6 +94,7 @@
       model.currentCat = model.cats[0]; // init current cat
       view.cat.render(model.currentCat); // render current cat
       controller.bindCounterWithCat(); // bind cat area with clicks on cat image
+      view.admin.init();
     },
     bindCounterWithCat: () => {
       let catImgElem = document.getElementById("cat-img");
@@ -61,6 +105,17 @@
         cat.clicksNumber = ++currentClicksNumber;
         catClicksCounterElem.textContent = cat.clicksNumber;
       });
+    },
+    enableAdmin: () => {
+      view.admin.render(model.currentCat);
+    },
+    saveAdminChanges: () => {
+      Object.assign(model.currentCat, view.admin.getValues());
+      view.cat.render(model.currentCat);
+      view.admin.close();
+    },
+    cancelAdmin: () => {
+      view.admin.close();
     }
   };
   
